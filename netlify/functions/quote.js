@@ -1,12 +1,12 @@
+import { settings } from "../../site-settings.js";
+
 export default async (req) => {
   const url = new URL(req.url);
-  const pages = Number(url.searchParams.get("pages")) || 1;
-
-  const baseFee = 500;  // placeholder: your setup fee
-  const perPage = 150;  // placeholder: your price per page
+  let pages = Math.floor(Number(url.searchParams.get("pages"))) || 1;
+  pages = Math.min(Math.max(pages, 1), settings.maxPages);
 
   return Response.json({
     pages: pages,
-    quote: baseFee + pages * perPage
+    quote: settings.baseFee + pages * settings.perPage
   });
 };
