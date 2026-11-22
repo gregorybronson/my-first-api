@@ -4,23 +4,50 @@
     <title>Thank You</title>
   </head>
   <body style="font-family: sans-serif; text-align: center; margin-top: 80px;">
-    <h1>Thank you. Your request is in.</h1>
-    <p style="font-size: 18px;">Choose how you would like to move forward.</p>
+    <h1 id="heading">Thank you. Your request is in.</h1>
+    <p id="subhead" style="font-size: 18px;">Choose how you would like to move forward.</p>
 
-    <p style="margin-top: 30px;">
-      <a href="https://buy.stripe.com/test_eVq6oHfmfeGq0rRgHAfw400"
-         style="font-size: 18px; padding: 12px 24px; background: #1a2b4c;
-                color: white; text-decoration: none; border-radius: 6px;">
+    <p id="payRow" style="margin-top: 30px;">
+      <button onclick="payDeposit()" id="payButton"
+              style="font-size: 18px; padding: 12px 24px; background: #1a2b4c;
+                     color: white; border: none; border-radius: 6px; cursor: pointer;">
         Pay a deposit and get started
-      </a>
+      </button>
     </p>
 
     <p style="margin-top: 30px;">
-      <a href="PASTE-YOUR-BOOKING-LINK-HERE"
+      <a href="PASTE-YOUR-BOOKING-LINK-HERE" id="bookLink"
          style="font-size: 18px; padding: 12px 24px; border: 2px solid #1a2b4c;
                 color: #1a2b4c; text-decoration: none; border-radius: 6px;">
         Book a call first
       </a>
     </p>
+
+    <script>
+      if (new URLSearchParams(window.location.search).get("paid") === "1") {
+        document.getElementById("heading").textContent = "Payment received. Thank you.";
+        document.getElementById("subhead").textContent =
+          "We will be in touch shortly to get started.";
+        document.getElementById("payRow").style.display = "none";
+        document.getElementById("bookLink").textContent = "Book your kickoff call";
+      }
+
+      async function payDeposit() {
+        const button = document.getElementById("payButton");
+        button.textContent = "One moment...";
+        const query = new URLSearchParams({
+          pages: sessionStorage.getItem("pages") || "1",
+          name: sessionStorage.getItem("name") || "",
+          email: sessionStorage.getItem("email") || ""
+        });
+        const response = await fetch("/.netlify/functions/checkout?" + query);
+        const data = await response.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          button.textContent = "Something went wrong. Please try again.";
+        }
+      }
+    </script>
   </body>
 </html>
