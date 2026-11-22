@@ -1,16 +1,14 @@
+import { settings } from "../../site-settings.js";
+
 export default async (req) => {
   const url = new URL(req.url);
-  const pages = Number(url.searchParams.get("pages")) || 1;
+  let pages = Math.floor(Number(url.searchParams.get("pages"))) || 1;
+  pages = Math.min(Math.max(pages, 1), settings.maxPages);
   const name = url.searchParams.get("name") || "";
   const email = url.searchParams.get("email") || "";
 
-  // Keep these the same as in quote.js
-  const baseFee = 500;      // placeholder: your setup fee
-  const perPage = 150;      // placeholder: your price per page
-  const depositRate = 0.5;  // placeholder: share of the quote due up front
-
-  const quote = baseFee + pages * perPage;
-  const deposit = Math.round(quote * depositRate);
+  const quote = settings.baseFee + pages * settings.perPage;
+  const deposit = Math.round(quote * settings.depositRate);
 
   const params = new URLSearchParams();
   params.append("mode", "payment");
