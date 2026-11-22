@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>My First API</title>
+    <title>Website Quote Calculator</title>
   </head>
   <body style="font-family: sans-serif; text-align: center; margin-top: 80px;">
-    <h1>My First API</h1>
-    <button onclick="callApi()" style="font-size: 18px; padding: 10px 20px;">
-      Call the API
+    <h1>Website Quote Calculator</h1>
+    <p>How many pages do you need?</p>
+    <input id="pages" type="number" value="5" min="1"
+           style="font-size: 18px; padding: 8px; width: 80px;">
+    <button onclick="getQuote()" style="font-size: 18px; padding: 10px 20px;">
+      Get my quote
     </button>
-    <p id="result" style="font-size: 20px; margin-top: 30px;"></p>
+    <p id="result" style="font-size: 22px; margin-top: 30px;"></p>
 
     <script>
-      async function callApi() {
-        const response = await fetch("/.netlify/functions/hello");
+      async function getQuote() {
+        const pages = document.getElementById("pages").value;
+        const response = await fetch("/.netlify/functions/quote?pages=" + pages);
         const data = await response.json();
         document.getElementById("result").textContent =
-          data.message + " at " + data.time;
+          "Your quote for " + data.pages + " pages is $" + data.quote;
       }
     </script>
   </body>
