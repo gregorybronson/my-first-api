@@ -13,6 +13,23 @@
     </button>
     <p id="result" style="font-size: 22px; margin-top: 30px;"></p>
 
+    <form id="leadForm" name="leads" method="POST" data-netlify="true"
+          style="display: none; margin-top: 30px;">
+      <input type="hidden" name="form-name" value="leads">
+      <input type="hidden" name="pages" id="leadPages">
+      <input type="hidden" name="quote" id="leadQuote">
+      <p>Like this quote? Tell us where to reach you.</p>
+      <p><input name="name" placeholder="Your name" required
+                style="font-size: 16px; padding: 8px;"></p>
+      <p><input name="email" type="email" placeholder="Email" required
+                style="font-size: 16px; padding: 8px;"></p>
+      <p><input name="phone" placeholder="Phone"
+                style="font-size: 16px; padding: 8px;"></p>
+      <button type="submit" style="font-size: 18px; padding: 10px 20px;">
+        Submit my request
+      </button>
+    </form>
+
     <script>
       async function getQuote() {
         const pages = document.getElementById("pages").value;
@@ -20,6 +37,9 @@
         const data = await response.json();
         document.getElementById("result").textContent =
           "Your quote for " + data.pages + " pages is $" + data.quote;
+        document.getElementById("leadPages").value = data.pages;
+        document.getElementById("leadQuote").value = data.quote;
+        document.getElementById("leadForm").style.display = "block";
       }
     </script>
   </body>
